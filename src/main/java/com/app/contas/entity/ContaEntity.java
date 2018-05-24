@@ -44,21 +44,21 @@ public class ContaEntity {
 	@JoinColumn(name = "conta_credito_id")
 	private ContaCreditoEntity contaCredito;
 	
-	public ContaEntity(String descricao, LocalDate dataInicio, LocalDate dataFim, BigDecimal valor) {
-		this.descricao = descricao;
-		this.dataInicio = dataInicio;
-		this.dataFim = dataFim;
-		this.valor = valor;
-	}
-
-	public ContaEntity(String descricao, LocalDate dataInicio, LocalDate dataFim, BigDecimal valor,
-			ContaCreditoEntity contaCredito) {
-		this.descricao = descricao;
-		this.dataInicio = dataInicio;
-		this.dataFim = dataFim;
-		this.valor = valor;
-		this.contaCredito = contaCredito;
-	}
+//	public ContaEntity(String descricao, LocalDate dataInicio, LocalDate dataFim, BigDecimal valor) {
+//		this.descricao = descricao;
+//		this.dataInicio = dataInicio;
+//		this.dataFim = dataFim;
+//		this.valor = valor;
+//	}
+//
+//	public ContaEntity(String descricao, LocalDate dataInicio, LocalDate dataFim, BigDecimal valor,
+//			ContaCreditoEntity contaCredito) {
+//		this.descricao = descricao;
+//		this.dataInicio = dataInicio;
+//		this.dataFim = dataFim;
+//		this.valor = valor;
+//		this.contaCredito = contaCredito;
+//	}
 
 	public Long getId() {
 		return id;

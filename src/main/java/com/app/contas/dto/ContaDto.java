@@ -2,6 +2,8 @@ package com.app.contas.dto;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.NotNull;
+
 import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -23,6 +25,7 @@ public class ContaDto {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate dataFim;
 	
+	@NotNull(message = "O valor da conta deve ser maior que 0.")
 	private BigDecimal valor;
 	
 	@JsonInclude(Include.NON_NULL)

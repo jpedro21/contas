@@ -16,9 +16,9 @@ public class ContaCreditoEntity {
 	
 	private Integer qtdParcelas;
 	
-	public ContaCreditoEntity(Integer qtdParcelas) {
-		this.qtdParcelas = qtdParcelas;
-	}
+//	public ContaCreditoEntity(Integer qtdParcelas) {
+//		this.qtdParcelas = qtdParcelas;
+//	}
 	
 	public Long getId() {
 		return id;

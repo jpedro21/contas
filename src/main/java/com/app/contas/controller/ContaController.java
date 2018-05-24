@@ -3,6 +3,7 @@ package com.app.contas.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
 
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.app.contas.service.ContaService;
 import com.app.contas.dto.ContaDto;
 import com.app.contas.entity.ContaEntity;
+import com.app.contas.service.ContaService;
 
 @RestController
 @RequestMapping("/contas")
@@ -55,7 +56,7 @@ public class ContaController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> cadastrar(@RequestBody ContaDto contaDto) {
+	public ResponseEntity<Void> cadastrar(@Valid @RequestBody ContaDto contaDto) {
 		
 		ContaEntity entity = contaService.criar(contaDto);		
 		
