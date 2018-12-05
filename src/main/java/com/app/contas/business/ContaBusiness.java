@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,45 +23,26 @@ public class ContaBusiness {
 	
 	private ModelMapper modelMapper = new ModelMapper();
 	
+	public Long criar(ContaDto conta) {
+		
+		ContaEntity contaEntity = modelMapper.map(conta, ContaEntity.class);
+		return contaRepository.save(contaEntity).getId();
+	}
+	
+	public List<ContaDto> buscarContasPorData(String data) {
+		
+		LocalDate dataInicio = LocalDate.parse(data, DateTimeFormat.forPattern("MM-yyyy"));
+		LocalDate dataFim = dataInicio.dayOfMonth().withMaximumValue();
+		
+		return mapearListaDto(contaRepository.findByDataBetween(dataInicio, dataFim));
+	}
+	
 	public ContaDto buscarPorId(Long id) {
 		
 		ContaEntity conta = contaRepository.findOne(id);
 		return modelMapper.map(conta, ContaDto.class);
 	}
 
-	public List<ContaDto> buscarPorData(LocalDate data) {
-		
-		List<ContaEntity> conta =  contaRepository.findByDataInicioAfterAndDataFimBefore(data, data);
-		conta.stream().forEach(c -> System.out.println("Conta com ID: " + c.getId()));
-		List<ContaDto> contaDto = mapearListaDto(conta);
-		
-		return contaDto;
-	}
-	
-	public List<ContaDto> buscarContasProximoMes(LocalDate mes) {
-		
-		List<ContaEntity> contaEntity = contaRepository.findByDataInicioAfterAndDataFimBefore(mes, mes.plusMonths(1));
-		return mapearListaDto(contaEntity);
-	}
-
-	public ContaEntity criarConta(ContaDto conta) {
-		
-		LocalDate dataFim = new LocalDate();
-		
-		if(conta.getContaCredito() != null) {
-			
-			Integer qtdParcela = conta.getContaCredito().getQtdParcelas();		
-			dataFim = conta.getDataInicio().plusMonths(qtdParcela);
-		
-		} else {
-			dataFim = conta.getDataInicio();
-		}
-		
-		conta.setDataFim(dataFim);
-		
-		ContaEntity contaEntity = modelMapper.map(conta, ContaEntity.class);
-		return contaRepository.save(contaEntity);
-	}
 
 	public void alterarConta(ContaDto conta) {
 		
@@ -78,11 +60,19 @@ public class ContaBusiness {
 		}
 	}
 	
+	public List<ContaDto> buscarTodasContas() {
+		
+		return mapearListaDto(contaRepository.findAll());
+	}
+	
 	private List<ContaDto> mapearListaDto(List<ContaEntity> conta) {
 			
 		return conta.stream()
 				.map(c -> modelMapper.map(c, ContaDto.class))
 				.collect(Collectors.toList());
 	}
+
+
+
 
 }

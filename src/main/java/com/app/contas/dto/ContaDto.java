@@ -2,9 +2,12 @@ package com.app.contas.dto;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.joda.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,19 +21,26 @@ public class ContaDto {
 	
 	private String descricao;
 	
+	@NotNull(message = "CT-2")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@JsonProperty("data")
-	private LocalDate dataInicio;
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private LocalDate data;
 	
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private LocalDate dataFim;
-	
-	@NotNull(message = "O valor da conta deve ser maior que 0.")
+	@Min(value = 1, message = "CT-3")
+	@NotNull(message = "CT-4")
+	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valor;
 	
-	@JsonInclude(Include.NON_NULL)
-	private ContaCreditoDto contaCredito;
+	public ContaDto() {}
 	
+	public ContaDto(Long id, String descricao, LocalDate data, BigDecimal valor) {
+		this.id = id;
+		this.descricao = descricao;
+		this.data = data;
+		this.valor = valor;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -47,35 +57,19 @@ public class ContaDto {
 		this.descricao = descricao;
 	}
 	
-	public LocalDate getDataInicio() {
-		return dataInicio;
+	public LocalDate getData() {
+		return data;
 	}
 	
-	public void setDataInicio(LocalDate data) {
-		this.dataInicio = data;
+	public void setData(LocalDate data) {
+		this.data = data;
 	}
 	
-	public LocalDate getDataFim() {
-		return dataFim;
-	}
-
-	public void setDataFim(LocalDate dataFim) {
-		this.dataFim = dataFim;
-	}
-
 	public BigDecimal getValor() {
 		return valor;
 	}
 	
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
-	}
-	
-	public ContaCreditoDto getContaCredito() {
-		return contaCredito;
-	}
-
-	public void setContaCredito(ContaCreditoDto contaCredito) {
-		this.contaCredito = contaCredito;
 	}
 }

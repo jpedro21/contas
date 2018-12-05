@@ -1,9 +1,15 @@
 package com.app.contas.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -16,9 +22,9 @@ public class ContaCreditoEntity {
 	
 	private Integer qtdParcelas;
 	
-//	public ContaCreditoEntity(Integer qtdParcelas) {
-//		this.qtdParcelas = qtdParcelas;
-//	}
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "conta_credito_id")
+	private List<ContaEntity> contas;
 	
 	public Long getId() {
 		return id;
@@ -35,29 +41,11 @@ public class ContaCreditoEntity {
 		this.qtdParcelas = qtdParcelas;
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ContaCreditoEntity other = (ContaCreditoEntity) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
+	public List<ContaEntity> getContas() {
+		return contas;
 	}
 	
-
+	public void setContas(List<ContaEntity> contas) {
+		this.contas = contas;
+	}
 }

@@ -3,9 +3,6 @@ package com.app.contas.controller;
 import java.net.URI;
 import java.util.List;
 
-import javax.validation.Valid;
-
-import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -21,15 +18,47 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.app.contas.dto.ContaDto;
-import com.app.contas.entity.ContaEntity;
+import com.app.contas.dto.DataDto;
 import com.app.contas.service.ContaService;
 
 @RestController
-@RequestMapping("/contas")
-public class ContaController {
+@RequestMapping("/conta")
+public class ContaController implements ContaApi {
 	
 	@Autowired
 	private ContaService contaService;
+		
+	public ResponseEntity<Void> cadastrar(@RequestBody ContaDto contaDto) {
+		
+		Long idCriado = contaService.criar(contaDto);		
+		
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("{id}")
+				.buildAndExpand(idCriado)
+				.toUri();
+	
+		return ResponseEntity.created(uri).build();
+	}
+	
+	@GetMapping("/data/{data}")
+	public ResponseEntity<DataDto<ContaDto>> bucarPorData(
+			@PathVariable @DateTimeFormat(pattern = "MM-yyyy") String data) {
+		
+		List<ContaDto> todasContas = contaService.bucarPorData(data);
+		
+		DataDto<ContaDto> retorno = new DataDto<>(todasContas); 
+		
+		return ResponseEntity.status(HttpStatus.OK).body(retorno);
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<ContaDto>> bucarTodasContas() {
+		
+		List<ContaDto> todasContas = contaService.bucarTodasContas();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(todasContas);
+	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Void> bucarPorId(@PathVariable Long id) {
@@ -37,36 +66,6 @@ public class ContaController {
 		contaService.buscarPorId(id);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
-	}
-	
-	@GetMapping("/{data}")
-	public ResponseEntity<List<ContaDto>> buscarPorData(@PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate data) {
-		
-		List<ContaDto> listConta = contaService.buscarPorData(data); 	 
-		
-		return ResponseEntity.status(HttpStatus.OK).body(listConta);
-	}
-	
-	@GetMapping("/proximo-mes/{mes}")
-	public ResponseEntity<List<ContaDto>> buscarContasProximoMes(@PathVariable @DateTimeFormat(pattern="MM") LocalDate mes) {
-		
-		List<ContaDto> listConta = contaService.contasProximoMes(mes);
-		
-		return ResponseEntity.status(HttpStatus.OK).body(listConta);
-	}
-	
-	@PostMapping
-	public ResponseEntity<Void> cadastrar(@Valid @RequestBody ContaDto contaDto) {
-		
-		ContaEntity entity = contaService.criar(contaDto);		
-		
-		URI uri = ServletUriComponentsBuilder
-				.fromCurrentRequest()
-				.path("{id}")
-				.buildAndExpand(entity.getId())
-				.toUri();
-	
-		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping("/{id}")

@@ -9,5 +9,6 @@ import com.app.contas.entity.ContaEntity;
 
 public interface ContaRepository extends JpaRepository<ContaEntity, Long> {
 
-	public List<ContaEntity> findByDataInicioAfterAndDataFimBefore(LocalDate dataInicio, LocalDate dataFim);
+	List<ContaEntity> findByDataBetween(LocalDate dataInicio, LocalDate dataFim);
+
 }
